@@ -39,6 +39,9 @@ import ServiceComplate from "./componunts/service master data/ServiceComplate";
 import ServiceIncomplate from "./componunts/service master data/ServiceIncomplate";
 import GoogleMapScrapper from "./componunts/scrapper/GoogleMapScrapper";
 import ProductDataImport from "./componunts/data import/ProductDataImport";
+import CleanListingMaster from "./componunts/clean master data/CleanListingMaster";
+import CleanProductMaster from "./componunts/clean master data/CleanProductMaster";
+import ListingCategory from "./componunts/masterdata/ListingCategory";
 import Dasboard2 from "./componunts/Dasboard2";
 import ListingDataReport from "./componunts/ListingDataReport";
 import ProductDataReport from "./componunts/ProductDataReport";
@@ -244,6 +247,25 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
+        name: "Clean Master Data",
+        children: [
+
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Listing Master",
+            path: "/masterdata/clean-listing-master",
+            element: <CleanListingMaster />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Product Master",
+            path: "/masterdata/clean-product-master",
+            element: <CleanProductMaster />,
+          },
+        ],    
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
         name: "Master data",
         children: [
           {
@@ -275,6 +297,12 @@ export const routes = [
                 element: <Area />,
               },
             ],
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Listing Category",
+            paht: "/masterdata/listing-category",
+            element: <ListingCategory />,
           },
           {
             icon: <TableCellsIcon {...icon} />,
