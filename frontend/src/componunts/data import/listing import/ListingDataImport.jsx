@@ -1,52 +1,32 @@
 import React, { useState } from "react";
-import api from "../../utils/Api";
+import api from "../../../utils/Api";
 
-const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
-
-const FreelistingUploader = () => {
-  const [files, setFiles] = useState([]);
+const ListingDataImport = () => {
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Handle file selection
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-
-    // Validate file size & type
-    const validFiles = [];
-    for (let file of selectedFiles) {
-      if (!file.name.endsWith(".csv")) {
-        alert(`${file.name} is not a CSV file`);
-        continue;
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        alert(`${file.name} exceeds 30MB limit`);
-        continue;
-      }
-      validFiles.push(file);
-    }
-
-    setFiles(validFiles);
+    console.log("Selected file:", e.target.files[0]);
+    setFile(e.target.files[0]);
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (files.length === 0) {
-      alert("Please select at least one CSV file!");
+    if (!file) {
+      setMessage("Please select a CSV file first!");
       return;
     }
 
     const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file); // backend should accept "files"
-    });
+    formData.append("file", file);
 
     try {
-      setLoading(true);
-
+      setLoading(true); // start loading
       const response = await api.post(
-        "/freelisting/upload/freelisting-data",
+        "/upload_csv_listing_data", 
         formData,
         {
           headers: {
@@ -56,39 +36,28 @@ const FreelistingUploader = () => {
       );
 
       console.log("Upload successful:", response.data);
-      alert("Files uploaded successfully!");
-      setFiles([]);
+      alert("File uploaded successfully!");
+      setFile(null); // clear file after upload
     } catch (error) {
-      console.error("Error uploading files:", error);
+      console.error("Error uploading file:", error);
       alert("File upload failed!");
     } finally {
-      setLoading(false);
+      setLoading(false); // stop loading
     }
   };
 
   return (
-    <div className="p-6 max-w-xlg bg-white rounded-lg shadow mt-6">
-      <h2 className="text-xl font-bold mb-4">Upload Listing CSV Files</h2>
+    <div className="p-6 max-w-md bg-white rounded-lg shadow mt-6">
+      <h2 className="text-xl font-bold mb-4">Upload Listing CSV File</h2>
 
       <form onSubmit={handleSubmit}>
         <input
           type="file"
           accept=".csv"
-          multiple
           onChange={handleFileChange}
           disabled={loading}
           className="mb-4 block w-full border border-gray-300 rounded-lg p-2"
         />
-
-        {files.length > 0 && (
-          <ul className="mb-4 text-sm text-gray-700">
-            {files.map((file, index) => (
-              <li key={index}>
-                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-              </li>
-            ))}
-          </ul>
-        )}
 
         <button
           type="submit"
@@ -132,4 +101,4 @@ const FreelistingUploader = () => {
   );
 };
 
-export default FreelistingUploader;
+export default ListingDataImport;
